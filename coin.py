@@ -31,32 +31,30 @@ def fetch_coin_data():
         response.raise_for_status()
 
 
+
 def get_coin_data(coin_id):
-    id = str(coin_id)
-    headers = {
-        'Accept': 'application/json',
-        'X-CMC_PRO_API_KEY': '5f127f99-3f49-494d-96bb-cc3b464a0cc2'
-    }
-    url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
-    response = requests.get(url, headers=headers)
     headers = {
         'Accept': 'application/json',
         'X-CMC_PRO_API_KEY': '5f127f99-3f49-494d-96bb-cc3b464a0cc2'
     }
 
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
-
     response = requests.get(url, headers=headers)
-    data = response.json()
-    coin = data['data']
-    for c in coin:
-        print(c)
-        if id == c['id']:
-            print(id)
-            price = c['quote']['USD']['price']
-            print(price)
-            break
-        
+    
+    if response.status_code != 200:
+        print(f"Error: {response.status_code} - {response.text}")
+        return None
+
+    data = response.json().get('data', [])
+
+    for coin in data:
+        if coin['id'] == coin_id:  
+            price = coin['quote']['USD']['price']
+            print(f"Coin ID: {coin_id}, Price: {price}")
+            return price
+
+    print(f"Coin with ID {coin_id} not found.")
+    return None
 
 if __name__ == "__main__":
     print(get_coin_data(1))

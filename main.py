@@ -1,4 +1,4 @@
-from coin import fetch_coin_data
+from coin import fetch_coin_data, get_coin_data
 from paystack import make_payment
 
 print("==============WELCOME TO TERMINAL VENDOR==============\nYour number one source for purchasing crypto via your terminal!!!!")
@@ -16,3 +16,9 @@ if choice == '1':
     print("Select which crypto you would like to buy:")
     fetch_coin_data()
     coin_choice = int(input("Enter the number of the crypto you want to buy: "))
+    cost = get_coin_data(coin_choice)
+    quantity = float(input("Enter the quantity you want to buy: "))
+    total_cost = int(quantity * (rate * cost))
+    payment = make_payment(email, total_cost)
+    print(f"copy this link and paste it in the browser: {payment}")
+
